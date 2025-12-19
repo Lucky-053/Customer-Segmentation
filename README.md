@@ -1,6 +1,7 @@
-# Customer-Segmentation
-Customer Segmentation using unsupervised learning.
-<br>
-This aim is to measure Silhouette score, stability of clusters, business interpretability.
-<br>
-This is the Internship Project.
+# Customer Segmentation using Machine Learning
+
+This project aims to segment customers based on demographic and spending
+patterns using unsupervised learning techniques.
+
+## Project Status
+Initial data loading and exploration.

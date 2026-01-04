@@ -111,7 +111,7 @@ def apply_dbscan(data: pd.DataFrame, eps: float, min_samples: int):
 
 
 
-# SAVE & LOAD UTILITIES (OPTIONAL)
+# SAVE & LOAD UTILITIES 
 
 
 def save_object(obj, path: str):

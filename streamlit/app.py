@@ -1,22 +1,21 @@
 import sys
 import os
 
-# -------------------------------------------------
+
 # Add project root to Python path
-# -------------------------------------------------
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# -------------------------------------------------
 # Libraries
-# -------------------------------------------------
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-# -------------------------------------------------
+
 # Project Imports
-# -------------------------------------------------
+
 from src.segmentation_pipeline import (
     preprocess_and_scale,
     apply_kmeans,
@@ -25,9 +24,9 @@ from src.segmentation_pipeline import (
     evaluate_kmeans
 )
 
-# -------------------------------------------------
+
 # Page Configuration
-# -------------------------------------------------
+
 st.set_page_config(page_title="Customer Segmentation", layout="wide")
 
 st.markdown(
@@ -39,10 +38,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# -------------------------------------------------
+
 # DATASET UPLOAD (SIDEBAR)
-# -------------------------------------------------
-st.sidebar.header("📂 Upload Dataset")
+
+st.sidebar.header(" Upload Dataset")
 file = st.sidebar.file_uploader("Upload CSV file", type=["csv"])
 
 if file is not None:
@@ -53,27 +52,27 @@ else:
     DATA_PATH = os.path.join(BASE_DIR, "data", "raw", "Mall_Customers.csv")
     df = pd.read_csv(DATA_PATH)
 
-st.subheader("📄 Raw Data")
+st.subheader(" Raw Data")
 st.dataframe(df.head())
 
-# -------------------------------------------------
+
 # PREPROCESSING (NO GENDER, NO RFM)
-# -------------------------------------------------
+
 df_scaled = preprocess_and_scale(df)
 
-# -------------------------------------------------
+
 # ALGORITHM SELECTION (SIDEBAR)
-# -------------------------------------------------
-st.sidebar.header("⚙️ Clustering Options")
+
+st.sidebar.header(" Clustering Options")
 
 algo = st.sidebar.selectbox(
     "Choose Algorithm",
     ["K-Means", "Hierarchical", "DBSCAN"]
 )
 
-# -------------------------------------------------
+
 # CLUSTERING
-# -------------------------------------------------
+
 if algo == "K-Means":
     k = st.sidebar.slider("Number of Clusters (K)", 2, 10, 4)
     labels, model = apply_kmeans(df_scaled, k)
@@ -90,22 +89,22 @@ else:
     labels = apply_dbscan(df_scaled, eps, min_samples)
     score = None
 
-# -------------------------------------------------
+
 # RESULTS
-# -------------------------------------------------
+
 df_result = df.copy()
 df_result["Cluster"] = labels
 
-st.subheader("📊 Clustered Data")
+st.subheader(" Clustered Data")
 st.dataframe(df_result.head())
 
 if score is not None:
     st.metric("Silhouette Score", round(score, 3))
 
-# -------------------------------------------------
+
 # CLUSTER DISTRIBUTION
-# -------------------------------------------------
-st.subheader("📈 Cluster Distribution")
+
+st.subheader(" Cluster Distribution")
 
 col1, col2 = st.columns(2)
 
@@ -125,10 +124,10 @@ with col2:
     )
     st.plotly_chart(pie_fig, use_container_width=True)
 
-# -------------------------------------------------
+
 # PCA VISUALIZATION
-# -------------------------------------------------
-st.subheader("🧭 Cluster Visualization (PCA)")
+
+st.subheader(" Cluster Visualization (PCA)")
 
 pca = PCA(n_components=2)
 pca_data = pca.fit_transform(df_scaled)
@@ -146,10 +145,10 @@ fig = px.scatter(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# -------------------------------------------------
+
 # CLUSTER PROFILING
-# -------------------------------------------------
-st.subheader("👥 Cluster Profiling")
+
+st.subheader(" Cluster Profiling")
 
 profile = df_result.groupby("Cluster")[
     ["Age", "Annual Income (k$)", "Spending Score (1-100)"]
@@ -157,10 +156,10 @@ profile = df_result.groupby("Cluster")[
 
 st.dataframe(profile)
 
-# -------------------------------------------------
+
 # DOWNLOAD RESULTS
-# -------------------------------------------------
-st.subheader("⬇️ Download Results")
+
+st.subheader(" Download Results")
 
 csv = df_result.to_csv(index=False).encode("utf-8")
 st.download_button(
@@ -170,16 +169,16 @@ st.download_button(
     "text/csv"
 )
 
-# -------------------------------------------------
+
 # CUSTOMER SEARCH
-# -------------------------------------------------
+
 st.subheader("🔍 Search Customer")
 
 if "CustomerID" in df_result.columns:
     cust_id = st.number_input("Enter Customer ID", min_value=1)
 
     if cust_id in df_result["CustomerID"].values:
-        st.success("Customer Found ✅")
+        st.success("Customer Found ")
         st.dataframe(df_result[df_result["CustomerID"] == cust_id])
     else:
         st.warning("Customer ID not found")

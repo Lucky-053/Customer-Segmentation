@@ -56,12 +56,12 @@ st.subheader(" Raw Data")
 st.dataframe(df.head())
 
 
-# PREPROCESSING (NO GENDER, NO RFM)
+# PREPROCESSING 
 
 df_scaled = preprocess_and_scale(df)
 
 
-# ALGORITHM SELECTION (SIDEBAR)
+# ALGORITHM SELECTION 
 
 st.sidebar.header(" Clustering Options")
 
